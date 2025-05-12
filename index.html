@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Indicadores</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">LOGO</div>
+    <div class="search-container">
+      <input type="text" id="buscaCidade" placeholder="Buscar cidade...">
+      <button onclick="buscarCidade()">Buscar</button>
+    </div>
+    <nav>
+      <a href="#">início</a>
+      <a href="#">indicadores</a>
+      <a href="#">relatório</a>
+      <a href="#">mapas</a>
+      <a href="#">sobre</a>
+    </nav>
+  </header>
+
+  <main>
+    <aside>
+      <h2>Filtros por Categorias</h2>
+      <form id="filtrosForm">
+        <label><input type="checkbox" name="categoria" value="renda"> Renda</label>
+        <label><input type="checkbox" name="categoria" value="educacao"> Educação</label>
+        <label><input type="checkbox" name="categoria" value="seguranca"> Segurança</label>
+        <label><input type="checkbox" name="categoria" value="saneamento"> Saneamento</label>
+        <label><input type="checkbox" name="categoria" value="populacao"> População</label>
+      </form>
+    </aside>
+
+    <section class="dashboard">
+      <div class="visualizacao" id="mapa"></div>
+      <div class="visualizacao" id="grafico-linha"></div>
+      <div class="visualizacao" id="grafico-barra"></div>
+      <div class="visualizacao" id="tabela"></div>
+      <div class="visualizacao" id="comparativo"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
