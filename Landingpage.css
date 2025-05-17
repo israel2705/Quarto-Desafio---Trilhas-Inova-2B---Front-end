@@ -68,7 +68,29 @@ main {
   flex-wrap: wrap;
 }
 .texto{
-    max-width: 600px;
+    
+    width: 745;
+    height: 255;
+    top: 174px;
+    left: 76px;
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 60px;
+    line-height: 100%;
+    letter-spacing: 0%;
+}
+.texto2{
+    width: 745;
+    height: 255;
+    top: 174px;
+    left: 76px;
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #6E6E6E;
+
 }
 .imagem{
     width: 100%;
