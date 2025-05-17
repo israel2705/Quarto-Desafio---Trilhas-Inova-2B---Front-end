@@ -2,13 +2,15 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  width: 1440;
+  height: 798;
+  top: 84px;
+  left: -4px;
+  background: #FFFFFF;
+  font-family: Arial, sans-serif;
 }
 
 header {
@@ -17,7 +19,7 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  background-color: #f5f5f5;
+  background: #FFFFFF;
   border-bottom: 1px solid #ccc;
   gap: 1rem;
 }
@@ -52,23 +54,20 @@ nav a {
   font-size: 0.95rem;
 }
 
-main {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
 .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 40px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: auto;
   flex-wrap: wrap;
 }
 .texto{
+    max-width: 600px;
     
+}
+.texto h1{
     width: 745;
     height: 255;
     top: 174px;
@@ -90,28 +89,50 @@ main {
     line-height: 100%;
     letter-spacing: 0%;
     color: #6E6E6E;
+}
+.imagem img{
+  width: 662;
+  height: auto;
+  top: 75px;
+  left: 759px;
+  box-shadow: 0px 4px 4px 0px #00000040;
 
 }
-.imagem{
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-    border-radius: 8px;
+
+.botao{
+ width: 200px;
+height: 45px;
+top: 573px;
+left: 100px;
+border-radius: 6px;
+background: #3366FF91;
+box-shadow: 0px 4px 4px 0px #00000040;
+font-family: Inter;
+font-weight: 600;
+font-size: 16px;
+line-height: 100%;
+letter-spacing: 0%;
+color: #FFFFFF;
 }
-.footer__Classe {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #ccc;
-  gap: 1rem;
+
+.footer__Classe{
   width: 1440;
-height: 53;
-top: 745px;
-background: #D4DCF6;
-
-
+  height: 19;
+  top: 762px;
+  left: 127px;
+  background: #D4DCF6;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px;
+  flex-wrap: wrap;
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  margin-right: 0px; 
+  align-items: center;
 }
 
 /* Responsividade extra para telas pequenas */
