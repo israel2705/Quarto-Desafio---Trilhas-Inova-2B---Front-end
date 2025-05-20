@@ -1,88 +1,116 @@
-let graficoLinha, graficoBarra;
+document.addEventListener('DOMContentLoaded', () => {
+  carregarEstados();
+  carregarAnos();
+  configurarEventos();
+});
 
-async function buscarCidade() {
-  const cidadeInput = document.getElementById('buscaCidade').value.trim().toLowerCase();
-  const indicadoresSelecionados = Array.from(document.querySelectorAll('#filtrosForm input:checked')).map(el => el.value);
+function carregarEstados() {
+  fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+    .then(response => response.json())
+    .then(estados => {
+      const estadoSelect = document.getElementById('estadoSelect');
+      estados.sort((a, b) => a.nome.localeCompare(b.nome));
+      estados.forEach(estado => {
+        const option = document.createElement('option');
+        option.value = estado.id;
+        option.textContent = estado.nome;
+        estadoSelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Erro ao carregar estados:', error));
+}
 
-  if (!cidadeInput) {
-    alert('Digite o nome de uma cidade.');
+function carregarCidades(estadoId) {
+  fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoId}/municipios`)
+    .then(response => response.json())
+    .then(cidades => {
+      const cidadeSelect = document.getElementById('cidadeSelect');
+      cidadeSelect.innerHTML = '<option value="">Selecione</option>';
+      cidades.sort((a, b) => a.nome.localeCompare(b.nome));
+      cidades.forEach(cidade => {
+        const option = document.createElement('option');
+        option.value = cidade.id;
+        option.textContent = cidade.nome;
+        cidadeSelect.appendChild(option);
+      });
+      cidadeSelect.disabled = false;
+    })
+    .catch(error => console.error('Erro ao carregar cidades:', error));
+}
+
+function carregarAnos() {
+  const anoSelect = document.getElementById('anoSelect');
+  const anoAtual = new Date().getFullYear();
+  for (let ano = anoAtual; ano >= 2000; ano--) {
+    const option = document.createElement('option');
+    option.value = ano;
+    option.textContent = ano;
+    anoSelect.appendChild(option);
+  }
+}
+
+function configurarEventos() {
+  document.getElementById('estadoSelect').addEventListener('change', (event) => {
+    const estadoId = event.target.value;
+    if (estadoId) {
+      carregarCidades(estadoId);
+    } else {
+      const cidadeSelect = document.getElementById('cidadeSelect');
+      cidadeSelect.innerHTML = '<option value="">Selecione</option>';
+      cidadeSelect.disabled = true;
+    }
+  });
+
+  document.getElementById('cidadeSelect').addEventListener('change', () => {
+    buscarIndicadores();
+  });
+
+  document.getElementById('anoSelect').addEventListener('change', () => {
+    buscarIndicadores();
+  });
+
+  document.querySelectorAll('input[name="indicador"]').forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+      buscarIndicadores();
+    });
+  });
+}
+
+function buscarIndicadores() {
+  const cidadeId = document.getElementById('cidadeSelect').value;
+  const ano = document.getElementById('anoSelect').value;
+  const indicadoresSelecionados = Array.from(document.querySelectorAll('input[name="indicador"]:checked')).map(cb => cb.value);
+
+  if (!cidadeId || !ano || indicadoresSelecionados.length === 0) {
     return;
   }
 
-  try {
-    const municipios = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios')
-      .then(res => res.json());
-    const cidade = municipios.find(m => m.nome.toLowerCase() === cidadeInput);
+  // Exemplo de IDs de variáveis na API SIDRA:
+  const variaveis = {
+    populacao: '93',
+    densidade: '94',
+    escolarizacao: '95',
+    salario: '96',
+    pib: '97'
+  };
 
-    if (!cidade) {
-      alert('Cidade não encontrada.');
-      return;
+  indicadoresSelecionados.forEach(indicador => {
+    const variavelId = variaveis[indicador];
+    if (variavelId) {
+      fetch(`https://servicodados.ibge.gov.br/api/v3/agregados/${variavelId}/periodos/${ano}/variaveis/${variavelId}?localidades=N6[${cidadeId}]`)
+        .then(response => response.json())
+        .then(dados => {
+          const resultado = dados[0]?.resultados[0]?.series[0]?.serie[ano];
+          if (resultado) {
+            document.getElementById(indicador).textContent = resultado;
+          } else {
+            document.getElementById(indicador).textContent = 'Dados não disponíveis';
+          }
+        })
+        .catch(error => {
+          console.error(`Erro ao buscar indicador ${indicador}:`, error);
+          document.getElementById(indicador).textContent = 'Erro ao carregar';
+        });
     }
-
-    const cidadeId = cidade.id;
-    document.getElementById('mapa').innerText = `Cidade selecionada: ${cidade.nome}`;
-
-    const anos = ['2018', '2019', '2020', '2021', '2022'];
-    const valoresRenda = [1200, 1300, 1350, 1400, 1500]; 
-    const valoresEducacao = [8.5, 8.7, 9.0, 9.1, 9.3];
-
-    if (graficoLinha) graficoLinha.destroy();
-    if (graficoBarra) graficoBarra.destroy();
-
-    const ctxLinha = document.createElement('canvas');
-    document.getElementById('grafico-linha').innerHTML = '';
-    document.getElementById('grafico-linha').appendChild(ctxLinha);
-
-    graficoLinha = new Chart(ctxLinha, {
-      type: 'line',
-      data: {
-        labels: anos,
-        datasets: [{
-          label: 'Renda Média per capita (R$)',
-          data: valoresRenda,
-          borderColor: 'blue',
-          backgroundColor: 'lightblue',
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: 'top' },
-          title: { display: true, text: 'Evolução da Renda Média' }
-        }
-      }
-    });
-
-    const ctxBarra = document.createElement('canvas');
-    document.getElementById('grafico-barra').innerHTML = '';
-    document.getElementById('grafico-barra').appendChild(ctxBarra);
-
-    graficoBarra = new Chart(ctxBarra, {
-      type: 'bar',
-      data: {
-        labels: ['Renda', 'Educação'],
-        datasets: [{
-          label: cidade.nome,
-          data: [valoresRenda.at(-1), valoresEducacao.at(-1)],
-          backgroundColor: ['green', 'orange']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: { display: true, text: 'Indicadores Comparativos' }
-        }
-      }
-    });
-
-    document.getElementById('tabela').innerHTML = `
-      <p><strong>Última Renda:</strong> R$ ${valoresRenda.at(-1)}</p>
-      <p><strong>Escolaridade Média:</strong> ${valoresEducacao.at(-1)} anos</p>
-    `;
-
-  } catch (err) {
-    console.error('Erro ao buscar dados:', err);
-    alert('Erro ao buscar dados.');
-  }
+  });
 }

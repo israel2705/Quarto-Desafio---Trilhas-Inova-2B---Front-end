@@ -1,50 +1,93 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Indicadores</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Indicadores Demográficos - IBGE SIDRA</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <div class="logo">LOGO</div>
-    <div class="search-container">
-      <input type="text" id="buscaCidade" placeholder="Buscar cidade...">
-      <button onclick="buscarCidade()">Buscar</button>
+    <div class="logo">
+      <div class="logo-icon"></div>
+      <span>Indicadores Demográficos</span>
     </div>
-    <nav>
-      <a href="#">início</a>
-      <a href="#">indicadores</a>
-      <a href="#">relatório</a>
-      <a href="#">mapas</a>
-      <a href="#">sobre</a>
-    </nav>
+    <button class="ajuda-btn">Ajuda</button>
   </header>
 
   <main>
     <aside>
-      <h2>Filtros por Categorias</h2>
-      <form id="filtrosForm">
-        <label><input type="checkbox" name="categoria" value="renda"> Renda</label>
-        <label><input type="checkbox" name="categoria" value="educacao"> Educação</label>
-        <label><input type="checkbox" name="categoria" value="seguranca"> Segurança</label>
-        <label><input type="checkbox" name="categoria" value="saneamento"> Saneamento</label>
-        <label><input type="checkbox" name="categoria" value="populacao"> População</label>
-      </form>
+      <label for="estadoSelect">Selecionar estado
+        <select id="estadoSelect">
+          <option value="">Selecione</option>
+          <!-- Estados serão preenchidos via JS -->
+        </select>
+      </label>
+      <label for="cidadeSelect">Selecionar cidade
+        <select id="cidadeSelect" disabled>
+          <option value="">Selecione</option>
+          <!-- Cidades serão preenchidas via JS -->
+        </select>
+      </label>
+      <label for="anoSelect">Selecionar ano
+        <select id="anoSelect">
+          <option value="">Selecione</option>
+          <!-- Anos serão preenchidos via JS -->
+        </select>
+      </label>
+
+      <div class="indicadores">
+        <p>Indicadores disponíveis</p>
+        <label><input type="checkbox" name="indicador" value="populacao" checked> População</label>
+        <label><input type="checkbox" name="indicador" value="densidade"> Densidade demográfica</label>
+        <label><input type="checkbox" name="indicador" value="escolarizacao"> Escolarização</label>
+        <label><input type="checkbox" name="indicador" value="salario"> Salário médio</label>
+        <label><input type="checkbox" name="indicador" value="pib"> PIB per capita</label>
+      </div>
     </aside>
 
-    <section class="dashboard">
-      <div class="visualizacao" id="mapa"></div>
-      <div class="visualizacao" id="grafico-linha"></div>
-      <div class="visualizacao" id="grafico-barra"></div>
-      <div class="visualizacao" id="tabela"></div>
-      <div class="visualizacao" id="comparativo"></div>
+    <section class="painel">
+      <div class="cabecalho">
+        <h2 id="tituloPainel">Indicadores da Cidade</h2>
+        <button class="exportar-btn">Exportar</button>
+      </div>
+
+      <div class="painel-content">
+        <div class="mapa-cidade">
+          <img id="mapaCidade" src="" alt="Mapa da cidade" style="max-width: 100%; height: auto;">
+        </div>
+
+        <div class="box-col">
+          <p><strong>População residente</strong></p>
+          <p id="populacao"></p>
+          <p><strong>Densidade demográfica</strong></p>
+          <p id="densidade"></p>
+        </div>
+
+        <div class="box-col">
+          <p><strong>Taxa de escolarização (6 a 14 anos)</strong></p>
+          <p id="escolarizacao"></p>
+          <p><strong>Salário médio mensal</strong></p>
+          <p id="salario"></p>
+        </div>
+
+        <div class="box-col">
+          <p><strong>PIB per capita</strong></p>
+          <p id="pib"></p>
+        </div>
+
+        <div class="graficos">
+          <div>
+            <img id="grafico1" src="" alt="Gráfico 1" style="max-width: 100%; height: auto;">
+          </div>
+          <div>
+            <img id="grafico2" src="" alt="Gráfico 2" style="max-width: 100%; height: auto;">
+          </div>
+        </div>
+      </div>
     </section>
   </main>
-  
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
